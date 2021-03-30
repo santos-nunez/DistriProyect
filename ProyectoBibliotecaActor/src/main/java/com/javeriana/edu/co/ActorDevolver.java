@@ -34,7 +34,7 @@ public class ActorDevolver {
                 mensaje2 = "";
 
                 ZMQ.Socket suscriber = context.createSocket(SocketType.SUB);
-                if (suscriber.connect("tcp://localHost:5557")) {
+                if (suscriber.connect("tcp://localHost:5556")) {
                     // if (suscriber.connect("tcp://25.67.209.173:5556")) {
                     // if (suscriber.connect("tcp://192.168.0.109:5556")) {
                     conect = true;

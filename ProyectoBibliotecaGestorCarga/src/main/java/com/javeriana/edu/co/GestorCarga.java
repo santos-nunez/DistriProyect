@@ -18,13 +18,9 @@ public class GestorCarga {
             ZMQ.Socket socket = contextClient.createSocket(SocketType.REP);
             socket.bind("tcp://*:6000");
 
-            ZMQ.Socket publisherRenovar = contextClient.createSocket(SocketType.PUB);
-            publisherRenovar.bind("tcp://*:5556");
-            publisherRenovar.bind("ipc://RENOVAR");
-
-            ZMQ.Socket publisherDevolver = contextClient.createSocket(SocketType.PUB);
-            publisherDevolver.bind("tcp://*:5557");
-            publisherDevolver.bind("ipc://DEVOLVER");
+            ZMQ.Socket publisher = contextClient.createSocket(SocketType.PUB);
+            publisher.bind("tcp://*:5556");
+            publisher.bind("ipc://PROCESO");
 
             while (!Thread.currentThread().isInterrupted()) {
                 /**
@@ -55,15 +51,11 @@ public class GestorCarga {
                  */
                 if (tipoSolicitud.equals("RENOVAR")) {
 
-                    /*
-                     * ZMQ.Socket publisher = context.createSocket(SocketType.PUB);
-                     * publisher.bind("tcp://*:5556"); publisher.bind("ipc://RENOVAR");
-                     */
                     int codigoTopico = 10000;
                     String enviar = arg1 + " " + arg2;
                     String update = String.format("%d %d %s", codigoTopico, id, enviar);
                     Hilo h = new Hilo("renovar");
-                    h.run(publisherRenovar, update);
+                    h.run(publisher, update);
 
                 } else if (tipoSolicitud.equals("DEVOLVER")) {
 
@@ -71,20 +63,14 @@ public class GestorCarga {
                     String enviar = arg1;
                     String update = String.format("%d %d %s", codigoTopico, id, enviar);
                     Hilo h = new Hilo("devolver");
-                    h.run(publisherDevolver, update);
+                    h.run(publisher, update);
 
                 } else if (tipoSolicitud.equals("SOLICITAR")) {
-                    try (ZContext context = new ZContext()) {
-                        ZMQ.Socket publisher = context.createSocket(SocketType.PUB);
-                        publisher.bind("tcp://*:5558");
-                        publisher.bind("ipc://SOLICITAR");
-                        while (!Thread.currentThread().isInterrupted()) {
-                            int codigoTopico = 10002;
-                            mensaje = "11-11-2021 11-11-2021";
-                            String update = String.format("%d %d %s", codigoTopico, id, mensaje);
-                            publisher.send(update, 0);
-                        }
-                    }
+                    int codigoTopico = 10002;
+                    String enviar = arg1;
+                    String update = String.format("%d %d %s", codigoTopico, id, enviar);
+                    Hilo h = new Hilo("solicitar");
+                    h.run(publisher, update);
                 } else {
                     Thread.sleep(1000);
                 }
