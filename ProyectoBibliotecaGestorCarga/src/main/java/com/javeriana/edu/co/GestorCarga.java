@@ -21,6 +21,8 @@ public class GestorCarga {
             ZMQ.Socket publisher = contextClient.createSocket(SocketType.PUB);
             publisher.bind("tcp://*:5556");
             publisher.bind("ipc://PROCESO");
+            Hilo h = new Hilo("", publisher, "");
+            Hilo h2 = new Hilo("", publisher, "");
 
             while (!Thread.currentThread().isInterrupted()) {
                 /**
@@ -49,28 +51,28 @@ public class GestorCarga {
                 /**
                  * Conectar con Actor
                  */
-                if (tipoSolicitud.equals("RENOVAR")) {
+                if (tipoSolicitud.equals("RENOVAR") && !h.isAlive()) {
 
                     int codigoTopico = 10000;
                     String enviar = arg1 + " " + arg2;
                     String update = String.format("%d %d %s", codigoTopico, id, enviar);
-                    Hilo h = new Hilo("renovar");
-                    h.run(publisher, update);
+                    h = new Hilo("renovar", publisher, update);
+                    h.start();
 
-                } else if (tipoSolicitud.equals("DEVOLVER")) {
+                } else if (tipoSolicitud.equals("DEVOLVER") && !h2.isAlive()) {
 
                     int codigoTopico = 10001;
                     String enviar = arg1;
                     String update = String.format("%d %d %s", codigoTopico, id, enviar);
-                    Hilo h = new Hilo("devolver");
-                    h.run(publisher, update);
+                    h2 = new Hilo("devolver", publisher, update);
+                    h2.start();
 
-                } else if (tipoSolicitud.equals("SOLICITAR")) {
+                } else if (tipoSolicitud.equals("SOLICITAR") && false) {
                     int codigoTopico = 10002;
                     String enviar = arg1;
                     String update = String.format("%d %d %s", codigoTopico, id, enviar);
-                    Hilo h = new Hilo("solicitar");
-                    h.run(publisher, update);
+                    h = new Hilo("solicitar", publisher, update);
+                    h.start();
                 } else {
                     Thread.sleep(1000);
                 }

@@ -11,27 +11,38 @@ public class Ps {
 
             // Socket to talk to server
             ZMQ.Socket socket = context.createSocket(SocketType.REQ);
+            ZMQ.Socket socketServer2 = context.createSocket(SocketType.REQ);
             // socket.connect("tcp://192.168.0.109:6000");
             socket.connect("tcp://localHost:6000");
+            socketServer2.connect("tcp://localHost:6000");
             // socket.connect("tcp://25.67.209.173:6000");
+            Hilo h = new Hilo("requestServer1-" + "", socket, "");
+            Hilo h2 = new Hilo("resquestServer2" + "", socketServer2, "");
+            int requestNbr = 0;
+            do {
 
-            for (int requestNbr = 0; requestNbr != 10; requestNbr++) {
-                String request = "RENOVAR 12 11-11-2011 11-12-2022";
-                System.out.println("Sending request " + requestNbr);
-                socket.send(request.getBytes(ZMQ.CHARSET), 0);
+                if (!h.isAlive()) {
+                    String request = "RENOVAR 12 11-11-2011 11-12-2022";
+                    System.out.println("Sending request renovar " + requestNbr);
+                    h = new Hilo("requestServer1-" + requestNbr, socket, request);
+                    h.start();
+                    requestNbr++;
+                }
+                if (!h2.isAlive()) {
+                    String request = "DEVOLVER 14 B12";
+                    System.out.println("Sending request devolver" + requestNbr);
+                    h2 = new Hilo("resquestServer2" + requestNbr, socketServer2, request);
+                    h2.start();
+                    requestNbr++;
+                }
+                if (!h.isAlive() || !h2.isAlive()) {
+                    Thread.sleep(100000);
+                }
 
-                byte[] reply = socket.recv(0);
-                System.out.println("Received " + new String(reply, ZMQ.CHARSET) + " " + requestNbr);
-            }
-
-            for (int requestNbr = 0; requestNbr != 10; requestNbr++) {
-                String request = "DEVOLVER 14 B12";
-                System.out.println("Sending request " + requestNbr);
-                socket.send(request.getBytes(ZMQ.CHARSET), 0);
-
-                byte[] reply = socket.recv(0);
-                System.out.println("Received " + new String(reply, ZMQ.CHARSET) + " " + requestNbr);
-            }
+            } while (h.isAlive());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
     }
 }

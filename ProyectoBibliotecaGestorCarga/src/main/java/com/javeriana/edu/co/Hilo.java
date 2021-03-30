@@ -7,15 +7,20 @@ import org.zeromq.ZMQ;
  *
  */
 public class Hilo extends Thread {
-    public Hilo(String name) {
+    private ZMQ.Socket publisher;
+    private String update;
+
+    public Hilo(String name, ZMQ.Socket publisher, String update) {
         super(name);
+        this.publisher = publisher;
+        this.update = update;
     }
 
-    public void run(ZMQ.Socket publisherRenovar, String update) {
+    public void run() {
 
         for (int i = 0; i < 10; i++) {
             System.out.println("Send " + ": [" + update + "]");
-            publisherRenovar.send(update, 0);
+            publisher.send(update, 0);
         }
     }
 
