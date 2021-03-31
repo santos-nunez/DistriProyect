@@ -39,21 +39,31 @@ public class PrestamoController {
         Prestamo prestamo = obtenerPrestamoById(idSolicitud);
         Boolean modificado = false;
         if (prestamo != null) {
-            prestamo.setFechaDevolucion(fechaDevolucion);
-            prestamo.setFechaSolicitud(fechaSolicitud);
-            prestamo.setFinalizado(false);
-            modificado = this.data.modificarPrestamo(this.arg, prestamo);
+            if (prestamo.getFechaSolicitud().before(fechaSolicitud)
+                    && prestamo.getFechaFinalizacion().before(fechaDevolucion)) {
+                prestamo.setFechaDevolucion(fechaDevolucion);
+                prestamo.setFechaSolicitud(fechaSolicitud);
+                prestamo.setFinalizado(false);
+                modificado = this.data.modificarPrestamo(this.arg, prestamo);
+            }
+
         }
         return modificado;
     }
 
-    public boolean devolverPrestamo(int idSolicitud, String codigo) {
+    public boolean devolverPrestamo(int idSolicitud) {
         Prestamo prestamo = obtenerPrestamoById(idSolicitud);
+        String codigo = prestamo.getCodigoLibro();
         Boolean modificado = false;
-        if (prestamo != null && prestamo.getCodigoLibro().equalsIgnoreCase(codigo)) {
-            prestamo.setFinalizado(true);
-            modificado = this.data.modificarPrestamo(this.arg, prestamo);
+        LibroController libro = new LibroController("libros.txt");
+        if (libro.obtenerLibrosByCodigo(codigo) != null) {
+            libro.devolverLibro(codigo);
+            if (prestamo != null && !prestamo.getFinalizado()) {
+                prestamo.setFinalizado(true);
+                modificado = this.data.modificarPrestamo(this.arg, prestamo);
+            }
         }
+
         return modificado;
     }
 }

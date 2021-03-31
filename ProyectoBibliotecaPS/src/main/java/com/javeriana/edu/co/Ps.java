@@ -22,14 +22,14 @@ public class Ps {
             do {
 
                 if (!h.isAlive()) {
-                    String request = "RENOVAR 12 11-11-2011 11-12-2022";
+                    String request = "RENOVAR 12";
                     System.out.println("Sending request renovar " + requestNbr);
                     h = new Hilo("requestServer1-" + requestNbr, socket, request);
                     h.start();
                     requestNbr++;
                 }
                 if (!h2.isAlive()) {
-                    String request = "DEVOLVER 14 B12";
+                    String request = "DEVOLVER 15";
                     System.out.println("Sending request devolver" + requestNbr);
                     h2 = new Hilo("resquestServer2" + requestNbr, socketServer2, request);
                     h2.start();
@@ -39,7 +39,7 @@ public class Ps {
                     Thread.sleep(100000);
                 }
 
-            } while (h.isAlive());
+            } while (h.isAlive() || h2.isAlive());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

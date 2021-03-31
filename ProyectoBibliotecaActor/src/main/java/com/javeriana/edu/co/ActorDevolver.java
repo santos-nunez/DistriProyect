@@ -1,10 +1,6 @@
 
 package com.javeriana.edu.co;
 
-import java.util.StringTokenizer;
-
-import com.javeriana.edu.co.controllers.*;
-
 import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
 import org.zeromq.ZContext;
@@ -15,80 +11,38 @@ import org.zeromq.ZContext;
 public class ActorDevolver {
 
     public static void main(String[] args) {
-        // if (args.length != 0) {
-        /* args[0] */
-        /**
-         * 
-         */
-        int cont = 0;
         Boolean conect = false;
-        String mensaje1, mensaje2;
-        String mensajeR1, mensajeR2;
-        mensajeR1 = "";
-        mensajeR2 = "";
         System.out.println("Actor devolver Start");
-        try (ZContext context = new ZContext()) {
-            while (!Thread.currentThread().isInterrupted()) {
-                conect = false;
-                mensaje1 = "";
-                mensaje2 = "";
+        try (ZContext context = new ZContext(); ZContext context2 = new ZContext()) {
 
-                ZMQ.Socket suscriber = context.createSocket(SocketType.SUB);
-                if (suscriber.connect("tcp://localHost:5556")) {
+            ZMQ.Socket suscriberGC1 = context.createSocket(SocketType.SUB);
+            ZMQ.Socket suscriberGC2 = context2.createSocket(SocketType.SUB);
+            Hilo h = new Hilo("conectServer1", suscriberGC1, "");
+            Hilo h2 = new Hilo("conectServer2", suscriberGC2, "");
+            while (!Thread.currentThread().isInterrupted()) {
+
+                if (suscriberGC1.connect("tcp://localHost:5557") && !h.isAlive()) {
+                    conect = true;
+                    String filter = (args.length > 0) ? args[0] : "10001 ";
+                    suscriberGC1.subscribe(filter.getBytes(ZMQ.CHARSET));
+                    h = new Hilo("conectServer1", suscriberGC1, "DEVOLVER");
+                    h.start();
+                }
+                if (suscriberGC2.connect("tcp://localHost:5556") && !h2.isAlive()) {
                     // if (suscriber.connect("tcp://25.67.209.173:5556")) {
                     // if (suscriber.connect("tcp://192.168.0.109:5556")) {
                     conect = true;
                     String filter = (args.length > 0) ? args[0] : "10001 ";
-                    suscriber.subscribe(filter.getBytes(ZMQ.CHARSET));
-                    String string;
-                    StringTokenizer sscanf;
-                    int codigo = -10;
-                    System.out.println("Recibiendo ... " + cont);
-                    string = suscriber.recvStr(0).trim();
-                    sscanf = new StringTokenizer(string, " ");
-                    codigo = Integer.valueOf(sscanf.nextToken());
-                    mensaje1 = sscanf.nextToken().toString();
-                    mensaje2 = sscanf.nextToken().toString();
-                    // mensaje3 = sscanf.nextToken().toString();
-                    System.out.println("Received " + cont + " :  [" + mensaje1 + " " + mensaje2 + " " + "]");
-                    cont++;
-                } else if (suscriber.connect("tcp://localHost:5557")) {
-                    conect = true;
-                    String filter = (args.length > 0) ? args[0] : "10000 ";
-                    suscriber.subscribe(filter.getBytes(ZMQ.CHARSET));
-                    String string;
-                    StringTokenizer sscanf;
-                    int codigo = -10;
-                    string = suscriber.recvStr(0).trim();
-                    sscanf = new StringTokenizer(string, " ");
-                    codigo = Integer.valueOf(sscanf.nextToken());
-                    mensaje1 = sscanf.nextToken().toString();
-                    mensaje2 = sscanf.nextToken().toString();
-                    // mensaje3 = sscanf.nextToken().toString();
-                    System.out.println("Received " + ": [" + mensaje1 + " " + mensaje2 + "]");
+                    suscriberGC2.subscribe(filter.getBytes(ZMQ.CHARSET));
+                    h2 = new Hilo("conectServer2", suscriberGC2, "DEVOLVER");
+                    h2.start();
                 } else {
-                    System.out.println("NO SE CONECTO");
-                }
-                if (conect && mensaje1.length() > 0 && mensaje2.length() > 0) {
-                    if (!mensaje1.equals(mensajeR1) && !mensaje2.equals(mensajeR2)) {
-                        mensajeR1 = mensaje1;
-                        mensajeR2 = mensaje2;
-                        // mensajeR3 = mensaje3;
-                        PrestamoController prestamo = new PrestamoController("prestamos.txt");
-                        LibroController libro = new LibroController("libros.txt");
-
-                        if (prestamo.devolverPrestamo(Integer.valueOf(mensaje1), mensaje2)) {
-                            System.out.println("Se ha modificado la base de datos prestamos para el ID " + mensaje1);
-                            if (libro.devolverLibro(mensaje2)) {
-                                System.out
-                                        .println("Se ha modificado la base de datos libros para el Codigo " + mensaje2);
-                            }
-                        }
-                    }
+                    System.out.println("ESPERANDO ...");
                 }
                 if (!conect) {
                     Thread.sleep(1000);
                 }
+                Thread.sleep(1000);
             }
         } catch (InterruptedException e) {
             System.out.println(e.getMessage());

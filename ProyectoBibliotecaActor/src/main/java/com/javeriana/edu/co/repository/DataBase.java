@@ -31,6 +31,7 @@ public class DataBase {
                         Integer.valueOf(textElements[2]), textElements[3].toString(), textElements[4].toString());
                 libros.add(libroNuevo);
             }
+            fr.close();
         } catch (Exception e) {
             System.out.println("Error en DataBase por " + e.getMessage());
         } finally {
@@ -70,6 +71,7 @@ public class DataBase {
                             Boolean.parseBoolean(textElements[5]));
                     prestamos.add(prestamo);
                 }
+                fr.close();
             }
         } catch (Exception e) {
             System.out.println("Error en DataBase leer fichero prestamo por " + e.getMessage());
@@ -117,8 +119,6 @@ public class DataBase {
                     textElements = linea.split(",");
                     if (Integer.parseInt(textElements[0]) == prestamo.getIdSolicitud()) {
                         Escribir(fNuevo, insertar);
-                        System.out.println(insertar);
-
                     } else {
                         Escribir(fNuevo, linea);
                     }
