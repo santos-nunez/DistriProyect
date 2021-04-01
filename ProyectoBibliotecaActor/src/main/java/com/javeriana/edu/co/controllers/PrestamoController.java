@@ -46,7 +46,6 @@ public class PrestamoController {
                 prestamo.setFinalizado(false);
                 modificado = this.data.modificarPrestamo(this.arg, prestamo);
             }
-
         }
         return modificado;
     }

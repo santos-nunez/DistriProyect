@@ -39,8 +39,6 @@ public class ActorRenovar {
           System.out.println("Segundo hilo");
           h2 = new Hilo("conectServer2", suscriberGC2, "RENOVAR");
           h2.start();
-        } else {
-          System.out.println("NO SE CONECTO");
         }
         if (!conect) {
           Thread.sleep(1000000);

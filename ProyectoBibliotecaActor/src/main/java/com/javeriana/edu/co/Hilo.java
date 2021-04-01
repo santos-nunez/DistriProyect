@@ -30,7 +30,6 @@ public class Hilo extends Thread {
         codigo = Integer.valueOf(sscanf.nextToken());
         mensaje1 = sscanf.nextToken().toString();
         if (tipoSolicitud == "RENOVAR") {
-            mensaje1 = sscanf.nextToken().toString();
             mensaje2 = sscanf.nextToken().toString();
             mensaje3 = sscanf.nextToken().toString();
             System.out.println("Received " + " :  [" + codigo + " " + mensaje1 + " " + mensaje2 + " " + mensaje3 + "]");

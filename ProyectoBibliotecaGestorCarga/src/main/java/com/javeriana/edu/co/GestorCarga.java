@@ -87,8 +87,9 @@ public class GestorCarga {
                     h = new Hilo("solicitar", publisher, update);
                     h.start();
                 } else {
-                    Thread.sleep(1000);
+                    System.out.println("ESPERANDO...");
                 }
+                Thread.sleep(200);
 
             }
 
