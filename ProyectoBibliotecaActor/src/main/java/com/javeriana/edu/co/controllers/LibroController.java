@@ -44,8 +44,8 @@ public class LibroController {
         return encontro;
     }
 
-    public Boolean devolverLibro(String id) {
-        Libro libro = obtenerLibrosByCodigo(id);
+    public Boolean devolverLibro(Libro lib) {
+        Libro libro = lib;
         Boolean modifico = false;
         if (libro != null) {
             int unidades = libro.getUnidades() + 1;

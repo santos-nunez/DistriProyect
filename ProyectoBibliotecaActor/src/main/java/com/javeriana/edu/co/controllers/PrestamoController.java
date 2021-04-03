@@ -2,6 +2,8 @@ package com.javeriana.edu.co.controllers;
 
 import java.util.Date;
 import java.util.List;
+
+import com.javeriana.edu.co.models.Libro;
 import com.javeriana.edu.co.models.Prestamo;
 import com.javeriana.edu.co.repository.DataBase;
 
@@ -55,11 +57,12 @@ public class PrestamoController {
         String codigo = prestamo.getCodigoLibro();
         Boolean modificado = false;
         LibroController libro = new LibroController("libros.txt");
-        if (libro.obtenerLibrosByCodigo(codigo) != null) {
-            libro.devolverLibro(codigo);
+        Libro lib = libro.obtenerLibrosByCodigo(codigo);
+        if (lib != null) {
             if (prestamo != null && !prestamo.getFinalizado()) {
                 prestamo.setFinalizado(true);
                 modificado = this.data.modificarPrestamo(this.arg, prestamo);
+                libro.devolverLibro(lib);
             }
         }
 

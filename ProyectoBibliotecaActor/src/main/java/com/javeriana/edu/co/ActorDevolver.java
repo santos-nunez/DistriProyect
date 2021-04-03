@@ -36,13 +36,10 @@ public class ActorDevolver {
                     suscriberGC2.subscribe(filter.getBytes(ZMQ.CHARSET));
                     h2 = new Hilo("conectServer2", suscriberGC2, "DEVOLVER");
                     h2.start();
-                } else {
-                    System.out.println("ESPERANDO ...");
                 }
                 if (!conect) {
                     Thread.sleep(1000);
                 }
-                Thread.sleep(1000);
             }
         } catch (InterruptedException e) {
             System.out.println(e.getMessage());

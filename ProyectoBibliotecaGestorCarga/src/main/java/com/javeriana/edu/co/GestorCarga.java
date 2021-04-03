@@ -1,13 +1,9 @@
 package com.javeriana.edu.co;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
-
-import javax.sound.sampled.SourceDataLine;
 
 import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
@@ -15,13 +11,12 @@ import org.zeromq.ZContext;
 
 public class GestorCarga {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         String tipoSolicitud = "";
         String[] mensajes;
         String mensaje;
         int id = 0;
         String arg1 = "";
-        String arg2 = "";
         try (ZContext contextClient = new ZContext()) {
             System.out.println("Gestor start");
             ZMQ.Socket socket = contextClient.createSocket(SocketType.REP);
@@ -33,7 +28,7 @@ public class GestorCarga {
             Hilo h = new Hilo("", publisher, "");
             Hilo h2 = new Hilo("", publisher, "");
 
-            Queue<String> cola = new LinkedList();
+            Queue<String> cola = new LinkedList<>();
             while (!Thread.currentThread().isInterrupted()) {
                 /**
                  * Conectar con cliente
@@ -86,7 +81,7 @@ public class GestorCarga {
                         h2 = new Hilo("devolver", publisher, update);
                         h2.start();
                         cola.poll();
-                    } else if (tipoSolicitud.equals("SOLICITAR") && false) {
+                    } else if (tipoSolicitud.equals("SOLICITAR")) {
                         int codigoTopico = 10002;
                         String enviar = arg1;
                         String update = String.format("%d %d %s", codigoTopico, id, enviar);
@@ -96,7 +91,7 @@ public class GestorCarga {
                 }
 
             }
-
+            contextClient.destroy();
         }
 
     }

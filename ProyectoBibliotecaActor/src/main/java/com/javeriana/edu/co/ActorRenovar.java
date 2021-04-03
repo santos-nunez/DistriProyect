@@ -41,7 +41,7 @@ public class ActorRenovar {
           h2.start();
         }
         if (!conect) {
-          Thread.sleep(1000000);
+          Thread.sleep(1000);
         }
       }
     } catch (InterruptedException e) {
