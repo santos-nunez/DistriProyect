@@ -20,14 +20,14 @@ public class Ps {
             int nEnviar = 0;
             DataBase db = new DataBase();
             List<String> peticiones = db.leerFichero("peticiones.txt");
-            String request = "RENOVAR 12";
+            String request = "";
             while (!Thread.currentThread().isInterrupted()) {
                 request = peticiones.get(nEnviar);
                 cliente.send(request.getBytes(ZMQ.CHARSET), 0);
                 boolean esperandoRespuesta = true;
                 while (esperandoRespuesta) {
                     // Poll socket for a reply, with timeout
-                    int rc = poller.poll(10000);
+                    int rc = poller.poll(1000);
                     if (rc == -1)
                         break;
                     if (poller.pollin(0)) {
