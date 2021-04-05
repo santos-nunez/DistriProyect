@@ -27,7 +27,7 @@ public class Ps {
                 boolean esperandoRespuesta = true;
                 while (esperandoRespuesta) {
                     // Poll socket for a reply, with timeout
-                    int rc = poller.poll(1000);
+                    int rc = poller.poll(2000);
                     if (rc == -1)
                         break;
                     if (poller.pollin(0)) {
