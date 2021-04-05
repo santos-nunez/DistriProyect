@@ -40,11 +40,8 @@ public class ActorRenovar {
           h2 = new Hilo("conectServer2", suscriberGC2, "RENOVAR");
           h2.start();
         }
-        if (!conect) {
-          Thread.sleep(1000);
-        }
       }
-    } catch (InterruptedException e) {
+    } catch (Exception e) {
       System.out.println(e.getMessage());
     }
   }

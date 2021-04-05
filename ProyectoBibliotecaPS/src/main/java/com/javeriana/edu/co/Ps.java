@@ -21,7 +21,7 @@ public class Ps {
             DataBase db = new DataBase();
             List<String> peticiones = db.leerFichero("peticiones.txt");
             String request = "";
-            while (!Thread.currentThread().isInterrupted()) {
+            while (nEnviar < peticiones.size()) {
                 request = peticiones.get(nEnviar);
                 cliente.send(request.getBytes(ZMQ.CHARSET), 0);
                 boolean esperandoRespuesta = true;

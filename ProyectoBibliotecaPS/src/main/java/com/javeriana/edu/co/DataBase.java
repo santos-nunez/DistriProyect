@@ -26,7 +26,8 @@ public class DataBase {
             String[] textElements;
             while ((linea = br.readLine()) != null) {
                 textElements = linea.split(",");
-                peticion = textElements[0].toString() + " " + textElements[1].toString() +" " + textElements[2].toString();
+                peticion = textElements[0].toString() + " " + textElements[1].toString(); 
+                        
                 peticiones.add(peticion);
             }
             fr.close();
