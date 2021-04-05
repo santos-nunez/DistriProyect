@@ -13,19 +13,17 @@ public class GestorCarga {
 
     public static void main(String[] args) {
         String tipoSolicitud = "";
-        String tipoSolicitud2 = "";
         String[] mensajes;
-        String[] recibe;
         String mensaje;
         int id = 0;
         String arg1 = "";
         try (ZContext contextClient = new ZContext()) {
             System.out.println("Gestor start");
             ZMQ.Socket socket = contextClient.createSocket(SocketType.REP);
-            socket.bind("tcp://25.14.192.153:6000");
+            socket.bind("tcp://*:6000");
 
             ZMQ.Socket publisher = contextClient.createSocket(SocketType.PUB);
-            publisher.bind("tcp://25.14.192.153:5556");
+            publisher.bind("tcp://*:5556");
             publisher.bind("ipc://PROCESO");
             Hilo h = new Hilo("", publisher, "");
             Hilo h2 = new Hilo("", publisher, "");
@@ -39,10 +37,9 @@ public class GestorCarga {
                 System.out.println("Received " + ": [" + new String(reply, ZMQ.CHARSET) + "]");
                 mensaje = new String(reply, ZMQ.CHARSET);
                 cola.add(mensaje);
-                recibe = mensaje.split(" ");
-                tipoSolicitud2 = recibe[0];
-                if (tipoSolicitud2 != "SOLICITAR") {
-                    String response = "PETICION DE " + tipoSolicitud2 + " ACEPTADA";
+
+                if (tipoSolicitud != "SOLICITAR") {
+                    String response = "PETICION DE " + tipoSolicitud + " ACEPTADA";
                     socket.send(response.getBytes(ZMQ.CHARSET), 0);
                 }
                 while (cola.size() > 0) {
