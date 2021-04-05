@@ -1,5 +1,7 @@
 package com.javeriana.edu.co;
 
+import java.util.List;
+
 import org.zeromq.SocketType;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
@@ -8,7 +10,7 @@ import org.zeromq.ZMQ.Poller;
 public class Ps {
     public static void main(String[] args) {
         try (ZContext context = new ZContext()) {
-            String[] servidor = { "tcp://localhost:7000", "tcp://localhost:6000" };
+            String[] servidor = { "tcp://localhost:7000", "tcp://25.14.192.153:6000" };
             int serverNbr = 0;
             System.out.println("contectado al servidor " + servidor[serverNbr]);
             ZMQ.Socket cliente = context.createSocket(SocketType.REQ);
@@ -16,15 +18,16 @@ public class Ps {
             Poller poller = context.createPoller(1);
             poller.register(cliente, ZMQ.Poller.POLLIN);
             int nEnviar = 0;
-            String[] peticiones = { "RENOVAR 12", "RENOVAR 13", "RENOVAR 14", "RENOVAR 15" };
+            DataBase db = new DataBase();
+            List<String> peticiones = db.leerFichero("peticiones.txt");
             String request = "RENOVAR 12";
             while (!Thread.currentThread().isInterrupted()) {
-                request = peticiones[nEnviar];
+                request = peticiones.get(nEnviar);
                 cliente.send(request.getBytes(ZMQ.CHARSET), 0);
                 boolean esperandoRespuesta = true;
                 while (esperandoRespuesta) {
                     // Poll socket for a reply, with timeout
-                    int rc = poller.poll(1000);
+                    int rc = poller.poll(10000);
                     if (rc == -1)
                         break;
                     if (poller.pollin(0)) {
