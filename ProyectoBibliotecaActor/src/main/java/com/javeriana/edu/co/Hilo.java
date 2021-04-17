@@ -25,7 +25,7 @@ public class Hilo extends Thread {
         SubHilo subh = new SubHilo("", "", "", "", "");
 
         do {
-            System.out.println("Recibiendo en hilo " + this.getName());
+            // System.out.println("Recibiendo en hilo " + this.getName());
             string = socket.recvStr(0).trim();
             cola.add(string);
             while (cola.size() > 0) {

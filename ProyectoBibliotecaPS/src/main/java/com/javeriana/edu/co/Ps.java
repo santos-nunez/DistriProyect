@@ -10,7 +10,7 @@ import org.zeromq.ZMQ.Poller;
 public class Ps {
     public static void main(String[] args) {
         try (ZContext context = new ZContext()) {
-            String[] servidor = { "tcp://localhost:7000", "tcp://25.14.192.153:6000" };
+            String[] servidor = { "tcp://localHost:6000", "tcp://25.14.192.153:6000" };
             int serverNbr = 0;
             System.out.println("contectado al servidor " + servidor[serverNbr]);
             ZMQ.Socket cliente = context.createSocket(SocketType.REQ);
