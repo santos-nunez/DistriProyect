@@ -1,9 +1,16 @@
 package com.javeriana.edu.co;
 
+import com.javeriana.edu.co.RMI.RemoteInterface;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
@@ -27,6 +34,9 @@ public class GestorCarga {
             publisher.bind("ipc://PROCESO");
             Hilo h = new Hilo("", publisher, "");
             Hilo h2 = new Hilo("", publisher, "");
+            Registry reg = LocateRegistry.getRegistry("Localhost", 3333);
+            RemoteInterface remote = (RemoteInterface) reg.lookup("SOLICITAR"); 
+            HiloRMI h3 = new HiloRMI("","", remote);
 
             Queue<String> cola = new LinkedList<>();
             while (!Thread.currentThread().isInterrupted()) {
@@ -38,7 +48,7 @@ public class GestorCarga {
                 mensaje = new String(reply, ZMQ.CHARSET);
                 cola.add(mensaje);
 
-                if (tipoSolicitud != "SOLICITAR") {
+                if (tipoSolicitud != "SOLICITAR" && tipoSolicitud != "") {
                     String response = "PETICION DE " + tipoSolicitud + " ACEPTADA";
                     socket.send(response.getBytes(ZMQ.CHARSET), 0);
                 }
@@ -52,6 +62,9 @@ public class GestorCarga {
                     if (mensajes.length == 2) {
                         tipoSolicitud = mensajes[0];
                         id = Integer.valueOf(mensajes[1]);
+                    }
+                    if (mensajes.length == 3) {
+                        tipoSolicitud = mensajes[0];
                     }
                     if (tipoSolicitud.equals("RENOVAR") && !h.isAlive()) {
 
@@ -82,17 +95,24 @@ public class GestorCarga {
                         h2.start();
                         cola.poll();
                     } else if (tipoSolicitud.equals("SOLICITAR")) {
-                        int codigoTopico = 10002;
+                        h3 = new HiloRMI("solicitar", enCola, remote);
+                        h3.start();
+                        cola.poll();
+                        /* int codigoTopico = 10002;
                         String enviar = arg1;
                         String update = String.format("%d %d %s", codigoTopico, id, enviar);
                         h = new Hilo("solicitar", publisher, update);
-                        h.start();
+                        h.start(); */
                     }
                 }
 
             }
             contextClient.destroy();
-        }
+        } catch (RemoteException ex) {
+            Logger.getLogger(GestorCarga.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(HiloRMI.class.getName()).log(Level.SEVERE, null, ex);
+        } 
 
     }
 }

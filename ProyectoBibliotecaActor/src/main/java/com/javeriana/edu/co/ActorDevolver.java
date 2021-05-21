@@ -21,14 +21,14 @@ public class ActorDevolver {
             Hilo h2 = new Hilo("conectServer2", suscriberGC2, "");
             while (!Thread.currentThread().isInterrupted()) {
 
-                if (suscriberGC1.connect("tcp://localHost:5557") && !h.isAlive()) {
+                if (suscriberGC1.connect("tcp://localHost:5556") && !h.isAlive()) {
                     conect = true;
                     String filter = (args.length > 0) ? args[0] : "10001 ";
                     suscriberGC1.subscribe(filter.getBytes(ZMQ.CHARSET));
                     h = new Hilo("conectServer1", suscriberGC1, "DEVOLVER");
                     h.start();
                 }
-                if (suscriberGC2.connect("tcp://localHost:5556") && !h2.isAlive()) {
+              /*  if (suscriberGC2.connect("tcp://localHost:5557") && !h2.isAlive()) {
                     // if (suscriber.connect("tcp://25.67.209.173:5556")) {
                     // if (suscriber.connect("tcp://192.168.0.109:5556")) {
                     conect = true;
@@ -36,7 +36,7 @@ public class ActorDevolver {
                     suscriberGC2.subscribe(filter.getBytes(ZMQ.CHARSET));
                     h2 = new Hilo("conectServer2", suscriberGC2, "DEVOLVER");
                     h2.start();
-                }
+                } */
                 if (!conect) {
                     Thread.sleep(1000);
                 }

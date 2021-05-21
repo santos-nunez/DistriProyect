@@ -25,9 +25,14 @@ public class DataBase {
             String linea;
             String[] textElements;
             while ((linea = br.readLine()) != null) {
+                peticion = "";
                 textElements = linea.split(",");
-                peticion = textElements[0].toString() + " " + textElements[1].toString(); 
-                        
+                if (textElements.length == 2) {
+                    peticion = textElements[0].toString() + " " + textElements[1].toString();
+                }
+                if (textElements.length == 3) {
+                    peticion = textElements[0].toString() + " " + textElements[1].toString()+ " " + textElements[2].toString();
+                }        
                 peticiones.add(peticion);
             }
             fr.close();
