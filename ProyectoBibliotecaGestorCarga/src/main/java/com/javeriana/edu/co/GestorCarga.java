@@ -18,7 +18,7 @@ public class GestorCarga {
         int id = 0;
         String arg1 = "";
         try (ZContext contextClient = new ZContext()) {
-            System.out.println("Gestor start");
+            System.out.println("GESTOR DE CARGA START ------");
             ZMQ.Socket socket = contextClient.createSocket(SocketType.REP);
             socket.bind("tcp://*:7000");
             ZMQ.Socket publisher = contextClient.createSocket(SocketType.PUB);

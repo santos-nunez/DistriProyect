@@ -60,7 +60,7 @@ public class DataBase {
             bw.close();
 
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
     }
 
@@ -71,7 +71,7 @@ public class DataBase {
             }
 
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
     }
 }

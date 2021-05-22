@@ -1,5 +1,6 @@
 package com.javeriana.edu.co;
 
+import java.util.StringTokenizer;
 import org.zeromq.SocketType;
 import org.zeromq.ZMQ;
 import org.zeromq.ZContext;
@@ -9,41 +10,39 @@ import org.zeromq.ZContext;
  */
 public class ActorRenovar {
 
-  public static void main(String[] args) {
+    public static void main(String[] args) {
 
-    Boolean conect = false;
+        Boolean conect = false;
 
-    System.out.println("Actor renovar Start");
-    try (ZContext context = new ZContext(); ZContext context2 = new ZContext()) {
+        System.out.println("ACTOR RENOVAR START ------");
+        try (ZContext context = new ZContext(); ZContext context2 = new ZContext()) {
 
-      ZMQ.Socket suscriberGC1 = context.createSocket(SocketType.SUB);
-      ZMQ.Socket suscriberGC2 = context2.createSocket(SocketType.SUB);
-      Hilo h = new Hilo("conectServer1", suscriberGC1, "");
-      Hilo h2 = new Hilo("conectServer2", suscriberGC2, "");
-      while (!Thread.currentThread().isInterrupted()) {
+            ZMQ.Socket suscriberGC1 = context.createSocket(SocketType.SUB);
+            while (!Thread.currentThread().isInterrupted()) {
 
-        if (suscriberGC1.connect("tcp://localHost:5557") && !h.isAlive()) {
-          conect = true;
-          String filter = (args.length > 0) ? args[0] : "10000 ";
-          suscriberGC1.subscribe(filter.getBytes(ZMQ.CHARSET));
-          System.out.println("Primer hilo");
-          h = new Hilo("conectServer1", suscriberGC1, "RENOVAR");
-          h.start();
+                if (suscriberGC1.connect("tcp://localHost:5557") ) {
+                    conect = true;
+                    String filter = (args.length > 0) ? args[0] : "10000 ";
+                    suscriberGC1.subscribe(filter.getBytes(ZMQ.CHARSET));
+                    SubHilo subh = new SubHilo("", "", "", "", "");
+                    String string, mensaje1 = "", mensaje2 = "", mensaje3 = "";
+                    StringTokenizer sscanf;
+                    string = suscriberGC1.recvStr(0).trim();
+                    sscanf = new StringTokenizer(string, " ");
+                    int codigo = Integer.valueOf(sscanf.nextToken());
+                    mensaje1 = sscanf.nextToken().toString();
+                    if (!subh.isAlive()) {
+                        mensaje2 = sscanf.nextToken().toString();
+                        mensaje3 = sscanf.nextToken().toString();
+                        subh = new SubHilo("SubHiloRenovar", "RENOVAR", mensaje1, mensaje2, mensaje3);
+                        subh.start();
+                        System.out.println(
+                                "Received " + " :  [" + codigo + " " + mensaje1 + " " + mensaje2 + " " + mensaje3 + "]");
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR EN ACTOR RENOVAR " + e.getMessage());
         }
-        /**
-        if (suscriberGC2.connect("tcp://localHost:5556") && !h2.isAlive()) {
-          // if (suscriber.connect("tcp://25.67.209.173:5556")) {
-          // if (suscriber.connect("tcp://192.168.0.109:5556")) {
-          conect = true;
-          String filter = (args.length > 0) ? args[0] : "10000 ";
-          suscriberGC2.subscribe(filter.getBytes(ZMQ.CHARSET));
-          //System.out.println("Segundo hilo");
-          h2 = new Hilo("conectServer2", suscriberGC2, "RENOVAR");
-          h2.start();
-        }*/
-      }
-    } catch (Exception e) {
-      System.out.println(e.getMessage());
     }
-  }
 }
