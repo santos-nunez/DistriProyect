@@ -19,7 +19,7 @@ public class Hilo extends Thread {
     public void run() {
 
         for (int i = 0; i < 1; i++) {
-            System.out.println("Send " + ": [" + update + "]");
+            //System.out.println("Send " + ": [" + update + "]");
             publisher.send(update, 0);
         }
     }

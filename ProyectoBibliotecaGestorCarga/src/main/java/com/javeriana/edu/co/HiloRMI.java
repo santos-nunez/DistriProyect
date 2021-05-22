@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.zeromq.ZMQ;
 
 /**
  *
@@ -23,11 +24,13 @@ public class HiloRMI extends Thread {
 
     public String solicitud;
     public RemoteInterface rem;
+    public ZMQ.Socket socket;
 
-    public HiloRMI(String name, String solicitud, RemoteInterface rem) {
+    public HiloRMI(String name, String solicitud, RemoteInterface rem, ZMQ.Socket socket) {
         super(name);
         this.solicitud = solicitud;
         this.rem = rem;
+        this.socket = socket; 
     }
 
     public void run() {
@@ -45,7 +48,9 @@ public class HiloRMI extends Thread {
             String fecha2 = dateF.getDate() + "-" + mes2 + "-" + year2;
             String enviar = fecha + " " + fecha2;
             solicitud = solicitud + " " + enviar;
-            rem.solicitar(solicitud);
+            String mensaje = rem.solicitar(solicitud);
+            socket.send(mensaje);
+            
         } catch (Exception ex) {
             Logger.getLogger(HiloRMI.class.getName()).log(Level.SEVERE, null, ex);
         }
