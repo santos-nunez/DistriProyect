@@ -68,4 +68,8 @@ public class PrestamoController {
 
         return modificado;
     }
+
+    public boolean crearPrestamo(Prestamo nuevo) {
+        return this.data.agregrar(this.arg, nuevo);
+    }
 }

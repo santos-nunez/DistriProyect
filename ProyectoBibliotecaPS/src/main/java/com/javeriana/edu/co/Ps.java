@@ -27,7 +27,8 @@ public class Ps {
                 boolean esperandoRespuesta = true;
                 while (esperandoRespuesta) {
                     // Poll socket for a reply, with timeout
-                    int rc = poller.poll(2000);
+                    Thread.sleep(500);
+                    int rc = poller.poll(500);
                     if (rc == -1)
                         break;
                     if (poller.pollin(0)) {
@@ -41,7 +42,6 @@ public class Ps {
                         poller.unregister(cliente);
                         context.destroySocket(cliente);
                         serverNbr = (serverNbr + 1) % 2;
-                        Thread.sleep(100);
                         System.out.println("contectado al servidor " + servidor[serverNbr]);
                         cliente = context.createSocket(SocketType.REQ);
                         cliente.connect(servidor[serverNbr]);

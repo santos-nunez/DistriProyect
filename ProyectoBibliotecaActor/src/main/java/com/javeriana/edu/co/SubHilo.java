@@ -29,19 +29,22 @@ public class SubHilo extends Thread {
                 try {
                     dat1 = objSDF.parse(mensaje2);
                     dat2 = objSDF.parse(mensaje3);
-                    if (prestamo.renovarPrestamo(Integer.valueOf(mensaje1), dat1, dat2)) {
+                    if (/**prestamo.renovarPrestamo(Integer.valueOf(mensaje1), dat1, dat2)*/true) {
                         System.out.println("Se ha modificado la base de datos para el ID " + mensaje1);
                     } else {
                         System.out.println("No se renovo");
                     }
                 } catch (ParseException e) {
-                    System.err.println("Error en Hilo " + this.getName() + " por " + e.getMessage());
+                    System.out.println("Error en Hilo " + this.getName() + " por " + e.getMessage());
+                }
+                catch (Exception e) {
+                    System.out.println("Error en Hilo " + this.getName() + " por " + e.getMessage());
                 }
             }
         } else if (tipoSolicitud == "DEVOLVER") {
             if (mensaje1.length() > 0) {
                 PrestamoController prestamo = new PrestamoController("prestamos.txt");
-                if (prestamo.devolverPrestamo(Integer.valueOf(mensaje1))) {
+                if (/**prestamo.devolverPrestamo(Integer.valueOf(mensaje1))*/true) {
                     System.out.println("Se ha modificado la base de datos prestamos para el ID " + mensaje1);
                 } else {
                     System.out.println("No se pudo devolver el libro porque el libro ya fue devuelto");
@@ -50,4 +53,5 @@ public class SubHilo extends Thread {
         }
 
     }
+    
 }
