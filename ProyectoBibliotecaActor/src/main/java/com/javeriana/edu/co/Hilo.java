@@ -41,7 +41,7 @@ public class Hilo extends Thread {
                     System.out.println(
                             "Received " + " :  [" + codigo + " " + mensaje1 + " " + mensaje2 + " " + mensaje3 + "]");
                     cola.poll();
-                } else if (tipoSolicitud == "DEVOLVER" && !subh.isAlive()) {
+                } if (tipoSolicitud == "DEVOLVER" && !subh.isAlive()) {
                     subh = new SubHilo("SubHiloDevolver", tipoSolicitud, mensaje1, "", "");
                     subh.start();
                     System.out.println("Received " + " :  [" + codigo + " " + mensaje1 + "]");

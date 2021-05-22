@@ -21,13 +21,17 @@ public class Ps {
             DataBase db = new DataBase();
             List<String> peticiones = db.leerFichero("peticiones.txt");
             String request = "";
+            boolean sessionActiva = false;
             while (nEnviar < peticiones.size()) {
+                
                 request = peticiones.get(nEnviar);
                 cliente.send(request.getBytes(ZMQ.CHARSET), 0);
                 boolean esperandoRespuesta = true;
+         
                 while (esperandoRespuesta) {
                     // Poll socket for a reply, with timeout
-                    int rc = poller.poll(2000);
+                    Thread.sleep(500);
+                    int rc = poller.poll(500);
                     if (rc == -1)
                         break;
                     if (poller.pollin(0)) {
@@ -37,11 +41,9 @@ public class Ps {
                         nEnviar++;
                     } else {
                         System.out.println("No responde el servidor " + servidor[serverNbr]);
-                        // Old socket is confused; close it and open a new one
                         poller.unregister(cliente);
                         context.destroySocket(cliente);
                         serverNbr = (serverNbr + 1) % 2;
-                        Thread.sleep(400);
                         System.out.println("contectado al servidor " + servidor[serverNbr]);
                         cliente = context.createSocket(SocketType.REQ);
                         cliente.connect(servidor[serverNbr]);
@@ -49,6 +51,7 @@ public class Ps {
                         cliente.send(request);
                     }
                 }
+                
             }
             context.destroy();
         } catch (Exception e) {
@@ -56,4 +59,5 @@ public class Ps {
         }
 
     }
+
 }
