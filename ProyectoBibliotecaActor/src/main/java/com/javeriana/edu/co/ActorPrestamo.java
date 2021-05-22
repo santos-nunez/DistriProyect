@@ -24,9 +24,8 @@ public class ActorPrestamo {
      public static void main(String[] args) throws AlreadyBoundException {
         // TODO code application logic here
         Registry reg;
-        
         try {
-            reg = LocateRegistry.createRegistry(3333);
+            reg = LocateRegistry.createRegistry(6500);
             reg.bind("SOLICITAR", new ServerImplementsActor());
         } catch (RemoteException ex) {
             Logger.getLogger(ActorPrestamo.class.getName()).log(Level.SEVERE, null, ex);

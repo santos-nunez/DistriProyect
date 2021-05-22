@@ -22,7 +22,7 @@ public class DataBase {
         File file = new File(nameFile);
         boolean fileIsNotLocked = file.renameTo(file);
         while (!fileIsNotLocked) {
-            Thread.sleep(3000);
+            Thread.sleep(100);
             fileIsNotLocked = file.renameTo(file);
         }
         return true;
@@ -51,7 +51,7 @@ public class DataBase {
                 fr.close();
             }
         } catch (Exception e) {
-            System.out.println("Error en DataBase librooo por " + e.getMessage());
+            System.out.println("Error en DataBase Libro por " + e.getMessage());
         } finally {
             return libros;
         }
@@ -65,7 +65,7 @@ public class DataBase {
         Prestamo prestamo;
         try {
             if (waitFile(arg)) {
-                Long Tinicio = System.currentTimeMillis();
+                
                 archivo = new File(arg);
                 if (archivo.exists()) {
                     fr = new FileReader(archivo);
@@ -88,8 +88,6 @@ public class DataBase {
                         prestamos.add(prestamo);
                     }
                     fr.close();
-                    Long Tfin = System.currentTimeMillis();
-                    System.out.println("tiempo: " + (Tfin-Tinicio));
                 }
             }
         } catch (Exception e) {
@@ -145,7 +143,6 @@ public class DataBase {
                     throw new Exception("Error en DataBase fichero prestamo por fichero no existe");
                 }
             }
-
         } catch (Exception e) {
             System.out.println(e);
         }

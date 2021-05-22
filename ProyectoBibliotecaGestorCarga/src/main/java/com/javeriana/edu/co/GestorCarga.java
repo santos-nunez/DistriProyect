@@ -28,16 +28,14 @@ public class GestorCarga {
             System.out.println("Gestor start");
             ZMQ.Socket socket = contextClient.createSocket(SocketType.REP);
             socket.bind("tcp://*:6000");
-
             ZMQ.Socket publisher = contextClient.createSocket(SocketType.PUB);
             publisher.bind("tcp://*:5556");
             publisher.bind("ipc://PROCESO");
             Hilo h = new Hilo("", publisher, "");
             Hilo h2 = new Hilo("", publisher, "");
-            Registry reg = LocateRegistry.getRegistry("Localhost", 3333);
+            Registry reg = LocateRegistry.getRegistry("Localhost", 6500);
             RemoteInterface remote = (RemoteInterface) reg.lookup("SOLICITAR"); 
             HiloRMI h3 = new HiloRMI("","", remote);
-
             Queue<String> cola = new LinkedList<>();
             while (!Thread.currentThread().isInterrupted()) {
                 /**
@@ -48,8 +46,12 @@ public class GestorCarga {
                 mensaje = new String(reply, ZMQ.CHARSET);
                 cola.add(mensaje);
 
-                if (tipoSolicitud != "SOLICITAR" && tipoSolicitud != "") {
+                if (!tipoSolicitud.equalsIgnoreCase("SOLICITAR") && !tipoSolicitud.equalsIgnoreCase("VACIO")) {
                     String response = "PETICION DE " + tipoSolicitud + " ACEPTADA";
+                    socket.send(response.getBytes(ZMQ.CHARSET), 0);
+                }
+                if(tipoSolicitud.equalsIgnoreCase("SOLICITAR")){
+                    String response = "PETICION DE " + tipoSolicitud + "";
                     socket.send(response.getBytes(ZMQ.CHARSET), 0);
                 }
                 while (cola.size() > 0) {
@@ -67,7 +69,6 @@ public class GestorCarga {
                         tipoSolicitud = mensajes[0];
                     }
                     if (tipoSolicitud.equals("RENOVAR") && !h.isAlive()) {
-
                         int codigoTopico = 10000;
 
                         Date dateS = new Date(), dateF = new Date();
@@ -88,24 +89,18 @@ public class GestorCarga {
                         cola.poll();
 
                     } else if (tipoSolicitud.equals("DEVOLVER") && !h2.isAlive()) {
-
                         int codigoTopico = 10001;
                         String update = String.format("%d %d", codigoTopico, id);
                         h2 = new Hilo("devolver", publisher, update);
                         h2.start();
                         cola.poll();
-                    } else if (tipoSolicitud.equals("SOLICITAR")) {
+                    } else if (tipoSolicitud.equals("SOLICITAR")&& !h3.isAlive()) {
                         h3 = new HiloRMI("solicitar", enCola, remote);
                         h3.start();
                         cola.poll();
-                        /* int codigoTopico = 10002;
-                        String enviar = arg1;
-                        String update = String.format("%d %d %s", codigoTopico, id, enviar);
-                        h = new Hilo("solicitar", publisher, update);
-                        h.start(); */
+                        
                     }
                 }
-
             }
             contextClient.destroy();
         } catch (RemoteException ex) {
@@ -113,6 +108,5 @@ public class GestorCarga {
         } catch (NotBoundException ex) {
             Logger.getLogger(HiloRMI.class.getName()).log(Level.SEVERE, null, ex);
         } 
-
     }
 }

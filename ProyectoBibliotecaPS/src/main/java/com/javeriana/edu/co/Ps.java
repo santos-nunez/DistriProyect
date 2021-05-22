@@ -41,7 +41,7 @@ public class Ps {
                         poller.unregister(cliente);
                         context.destroySocket(cliente);
                         serverNbr = (serverNbr + 1) % 2;
-                        Thread.sleep(100);
+                        Thread.sleep(400);
                         System.out.println("contectado al servidor " + servidor[serverNbr]);
                         cliente = context.createSocket(SocketType.REQ);
                         cliente.connect(servidor[serverNbr]);
