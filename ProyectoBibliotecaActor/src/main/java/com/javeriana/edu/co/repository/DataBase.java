@@ -13,18 +13,17 @@ import java.util.logging.Logger;
 
 public class DataBase {
 
-    Semaphore sem;
 
     public DataBase() {
     }
 
     public boolean waitFile(String nameFile) throws InterruptedException {
-        File file = new File(nameFile);
+        /**File file = new File(nameFile);
         boolean fileIsNotLocked = file.renameTo(file);
         while (!fileIsNotLocked) {
             Thread.sleep(100);
             fileIsNotLocked = file.renameTo(file);
-        }
+        }*/
         return true;
     }
 

@@ -21,10 +21,11 @@ public class ActorDevolver {
             Hilo h2 = new Hilo("conectServer2", suscriberGC2, "");
             while (!Thread.currentThread().isInterrupted()) {
 
-                if (suscriberGC1.connect("tcp://localHost:5556") && !h.isAlive()) {
+                if (suscriberGC1.connect("tcp://localHost:5557") && !h.isAlive()) {
                     conect = true;
                     String filter = (args.length > 0) ? args[0] : "10001 ";
                     suscriberGC1.subscribe(filter.getBytes(ZMQ.CHARSET));
+                    System.out.println("Primer hilo");
                     h = new Hilo("conectServer1", suscriberGC1, "DEVOLVER");
                     h.start();
                 }

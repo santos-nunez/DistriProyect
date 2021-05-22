@@ -22,7 +22,7 @@ public class ActorRenovar {
             Hilo h2 = new Hilo("conectServer2", suscriberGC2, "");
             while (!Thread.currentThread().isInterrupted()) {
 
-                if (suscriberGC1.connect("tcp://localhost:5556") && !h.isAlive()) {
+                if (suscriberGC1.connect("tcp://localhost:5557") && !h.isAlive()) {
                     // if (suscriberGC1.connect("tcp://25.87.209.187:5556") && !h.isAlive()) {
                     conect = true;
                     String filter = (args.length > 0) ? args[0] : "10000 ";
