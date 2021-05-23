@@ -9,6 +9,9 @@ import org.zeromq.ZMQ.Poller;
 
 public class Ps {
     public static void main(String[] args) {
+        iniciar("C:\\Users\\admin\\Documents\\GitHub\\DistriProyect\\ProyectoBibliotecaPS\\peticiones.txt");
+    }
+    public static void iniciar(String ruta) {
         try (ZContext context = new ZContext()) {
             String[] servidor = { "tcp://10.0.4.89:7000", "tcp://localhost:7000" };
             int serverNbr = 0;
@@ -19,7 +22,7 @@ public class Ps {
             poller.register(cliente, ZMQ.Poller.POLLIN);
             int nEnviar = 0;
             DataBase db = new DataBase();
-            List<String> peticiones = db.leerFichero("peticiones.txt");
+            List<String> peticiones = db.leerFichero(ruta);
             String request = "";
             String tipo;
             while (nEnviar < peticiones.size()) {
