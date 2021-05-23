@@ -11,6 +11,7 @@ public class Ps {
     public static void main(String[] args) {
         iniciar("C:\\Users\\admin\\Documents\\GitHub\\DistriProyect\\ProyectoBibliotecaPS\\peticiones.txt");
     }
+
     public static void iniciar(String ruta) {
         try (ZContext context = new ZContext()) {
             String[] servidor = { "tcp://10.0.4.89:7000", "tcp://localhost:7000" };
@@ -24,7 +25,7 @@ public class Ps {
             DataBase db = new DataBase();
             List<String> peticiones = db.leerFichero(ruta);
             String request = "";
-            String tipo;
+            String tipo = "";
             while (nEnviar < peticiones.size()) {
                 request = peticiones.get(nEnviar);
                 cliente.send(request.getBytes(ZMQ.CHARSET), 0);
@@ -32,10 +33,10 @@ public class Ps {
                 tipo = request.split(" ")[0];
                 while (esperandoRespuesta) {
                     // Poll socket for a reply, with timeout
-                    if(tipo.equalsIgnoreCase("SOLICITAR")){
+                    if (tipo.equalsIgnoreCase("SOLICITAR")) {
                         Thread.sleep(1000);
-                    }else{
-                         Thread.sleep(500);
+                    } else {
+                        Thread.sleep(500);
                     }
                     int rc = poller.poll(500);
                     if (rc == -1)
