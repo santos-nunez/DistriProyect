@@ -21,6 +21,7 @@ public class ActorDevolver {
             ZMQ.Socket conectarBDActorDevolver = context.createSocket(SocketType.REP);
             conectarBDActorDevolver.bind("tcp://*:4444");
             Hilo actualizarDB = new Hilo("act", conectarBDActorDevolver);
+            actualizarDB.start();
             while (!Thread.currentThread().isInterrupted()) {
                 if (suscriberGC1.connect("tcp://localHost:5557")) {
                 //if (suscriberGC1.connect("tcp://10.0.4.87:5557")) {
@@ -46,7 +47,7 @@ public class ActorDevolver {
                          * SE CONECTA CON EL HILO DEL ACTOR DEVOLVER
                          */
                         conectarHiloDevolver.connect("tcp://10.0.4.87:4444");
-                        conectarHiloDevolver.send(mensaje1);
+                        conectarHiloDevolver.send(string);
                     }
                 }
             }

@@ -47,7 +47,7 @@ public class SubHilo extends Thread {
                 if (prestamo.devolverPrestamo(Integer.valueOf(mensaje1))) {
                     System.out.println("Se ha modificado la base de datos prestamos para el ID " + mensaje1);
                 } else {
-                    System.out.println("No se pudo devolver el libro porque el libro ya fue devuelto");
+                    System.out.println("No se pudo devolver");
                 }
             }
         }

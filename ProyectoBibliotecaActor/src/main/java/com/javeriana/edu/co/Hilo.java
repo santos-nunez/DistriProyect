@@ -18,12 +18,13 @@ public class Hilo extends Thread {
     public void run() {
         String mensaje;
         SubHilo subh = new SubHilo("", "", "", "", "");
+        SubHilo subh2 = new SubHilo("", "", "", "", "");
         String string, mensaje1 = "";
         StringTokenizer sscanf;
         while (!Thread.currentThread().isInterrupted()) {
-            byte[] reply = socket.recv(0);
-            System.out.println("Received " + ": [" + new String(reply, ZMQ.CHARSET) + "]");
-            mensaje = new String(reply, ZMQ.CHARSET);
+            /**
+             * SE RECIBE DEL OTRO ACTOR
+             */
             string = socket.recvStr(0).trim();
             sscanf = new StringTokenizer(string, " ");
             int codigo = Integer.valueOf(sscanf.nextToken());
@@ -33,6 +34,7 @@ public class Hilo extends Thread {
                 subh.start();
                 System.out.println("Received " + " :  [" + codigo + " " + mensaje1 + "]");
             }
+            
 
         }
     }
