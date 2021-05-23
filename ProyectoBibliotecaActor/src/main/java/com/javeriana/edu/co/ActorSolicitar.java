@@ -26,7 +26,7 @@ public class ActorSolicitar {
         try (ZContext contextClient = new ZContext()) {
             System.out.println("ACTOR SOLICITAR START ------");
             ZMQ.Socket socket = contextClient.createSocket(SocketType.REP);
-            socket.bind("tcp://localhost:3333");
+            socket.bind("tcp://*:3333");
             String mensaje;
             LibroController libroController = new LibroController("libros.txt");
             while (!Thread.currentThread().isInterrupted()) {
