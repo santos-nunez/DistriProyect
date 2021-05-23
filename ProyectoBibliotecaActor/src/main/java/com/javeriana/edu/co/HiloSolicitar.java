@@ -33,6 +33,7 @@ public class HiloSolicitar extends Thread {
                  * SE RECIBE DEL OTRO ACTOR
                  */
                 string = socket.recvStr(0).trim();
+                System.out.println("Received " + ": [" + string + "]");
                 sscanf = new StringTokenizer(string, " ");
                 String peticion = sscanf.nextToken();
                 String codigoLibro = sscanf.nextToken().toString();
@@ -53,12 +54,7 @@ public class HiloSolicitar extends Thread {
                     } else{
                         socket.send("false");
                     }
-                } else{
-                    /**
-                     * ActualizaDB
-                     */
-                    libroController.solicitarLibro(codigoLibro, idSolicitante, dat1, dat2);
-                }
+                } 
             } catch (ParseException ex) {
                 Logger.getLogger(HiloSolicitar.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -56,15 +56,16 @@ public class ActorSolicitar {
                  * SE CONECTA CON EL HILO DEL ACTOR SOLICITAR
                  */
                 conectarHiloDevolver.connect("tcp://10.0.4.87:6666");
-                string = "VALIDAR" + " " + codigoLibro + " " + idSolicitante + " " + dat1 + " " + dat2;
+                string = "VALIDAR" + " " + codigoLibro + " " + idSolicitante + " " + fechaSolicitud + " " + fechaFinalizacion;
                 HiloSolicitar.sleep(500);
                 conectarHiloDevolver.send(string);
+                System.out.println("ESPERANDO VALIDAR--------------");
                 mensaje = conectarHiloDevolver.recvStr(0).trim();
                 if(mensaje.equalsIgnoreCase("true")){
                     estado = libroController.solicitarLibro(codigoLibro, idSolicitante, dat1, dat2);
                     socket.send(estado);
                 }else{
-                    Thread.sleep(500);
+                    Thread.sleep(100);
                     estado = libroController.solicitarLibro(codigoLibro, idSolicitante, dat1, dat2);
                     socket.send(estado);
                 }

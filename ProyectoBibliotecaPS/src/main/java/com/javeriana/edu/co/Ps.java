@@ -21,13 +21,19 @@ public class Ps {
             DataBase db = new DataBase();
             List<String> peticiones = db.leerFichero("peticiones.txt");
             String request = "";
+            String tipo;
             while (nEnviar < peticiones.size()) {
                 request = peticiones.get(nEnviar);
                 cliente.send(request.getBytes(ZMQ.CHARSET), 0);
                 boolean esperandoRespuesta = true;
+                tipo = request.split(" ")[0];
                 while (esperandoRespuesta) {
                     // Poll socket for a reply, with timeout
-                    Thread.sleep(500);
+                    if(tipo.equalsIgnoreCase("SOLICITAR")){
+                        Thread.sleep(1000);
+                    }else{
+                         Thread.sleep(500);
+                    }
                     int rc = poller.poll(500);
                     if (rc == -1)
                         break;
