@@ -35,7 +35,7 @@ public class ActorSolicitar {
             actualizarDB.start();
             while (!Thread.currentThread().isInterrupted()) {
                 byte[] reply = socket.recv(0);
-                
+
                 System.out.println("Received " + ": [" + new String(reply, ZMQ.CHARSET) + "]");
                 mensaje = new String(reply, ZMQ.CHARSET);
                 StringTokenizer sscanf = new StringTokenizer(mensaje, " ");
@@ -59,17 +59,15 @@ public class ActorSolicitar {
                 string = "VALIDAR" + " " + codigoLibro + " " + idSolicitante + " " + fechaSolicitud + " " + fechaFinalizacion;
                 HiloSolicitar.sleep(500);
                 conectarHiloDevolver.send(string);
-                System.out.println("ESPERANDO VALIDAR--------------");
                 mensaje = conectarHiloDevolver.recvStr(0).trim();
-                if(mensaje.equalsIgnoreCase("true")){
+                if (mensaje.equalsIgnoreCase("true")) {
                     estado = libroController.solicitarLibro(codigoLibro, idSolicitante, dat1, dat2);
                     socket.send(estado);
-                }else{
+                } else {
                     Thread.sleep(100);
                     estado = libroController.solicitarLibro(codigoLibro, idSolicitante, dat1, dat2);
                     socket.send(estado);
                 }
-                
             }
         } catch (ParseException ex) {
             Logger.getLogger(ActorSolicitar.class.getName()).log(Level.SEVERE, null, ex);
@@ -77,5 +75,4 @@ public class ActorSolicitar {
             Logger.getLogger(ActorSolicitar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 }

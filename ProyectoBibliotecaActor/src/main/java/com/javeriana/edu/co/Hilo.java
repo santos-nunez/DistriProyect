@@ -40,11 +40,9 @@ public class Hilo extends Thread {
                     mensaje3 = sscanf.nextToken().toString();
                     subh = new SubHilo("SubHiloRenovar", "RENOVAR", mensaje1, mensaje2, mensaje3);
                     subh.start();
-                    System.out.println("Received " + " :  [" + codigo + " " + mensaje1 +  " " + mensaje2 +  " " + mensaje3 +"]");
+                    System.out.println("Received " + " :  [" + codigo + " " + mensaje1 + " " + mensaje2 + " " + mensaje3 + "]");
                 }
-
             }
-
         }
     }
 
