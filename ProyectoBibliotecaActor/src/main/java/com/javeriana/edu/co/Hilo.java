@@ -26,14 +26,14 @@ public class Hilo extends Thread {
             string = socket.recvStr(0).trim();
             sscanf = new StringTokenizer(string, " ");
             int codigo = Integer.valueOf(sscanf.nextToken());
-            if (codigo == 1001) {
+            if (codigo == 10001) {
                 if (!subh.isAlive()) {
                     mensaje1 = sscanf.nextToken().toString();
                     subh = new SubHilo("SubHiloDevolver", "DEVOLVER", mensaje1, "", "");
                     subh.start();
                     System.out.println("Received " + " :  [" + codigo + " " + mensaje1 + "]");
                 }
-            } else if (codigo == 1000) {
+            } else if (codigo == 10000) {
                 if (!subh.isAlive()) {
                     mensaje1 = sscanf.nextToken().toString();
                     mensaje2 = sscanf.nextToken().toString();
