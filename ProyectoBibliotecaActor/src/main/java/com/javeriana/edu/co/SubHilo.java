@@ -7,6 +7,7 @@ import java.util.Date;
 import com.javeriana.edu.co.controllers.PrestamoController;
 
 public class SubHilo extends Thread {
+
     private String tipoSolicitud;
     private String mensaje1;
     private String mensaje2;
@@ -36,8 +37,7 @@ public class SubHilo extends Thread {
                     }
                 } catch (ParseException e) {
                     System.out.println("Error en Hilo " + this.getName() + " por " + e.getMessage());
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     System.out.println("Error en Hilo " + this.getName() + " por " + e.getMessage());
                 }
             }
@@ -53,5 +53,5 @@ public class SubHilo extends Thread {
         }
 
     }
-    
+
 }

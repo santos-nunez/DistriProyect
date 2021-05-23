@@ -18,7 +18,10 @@ public class ActorRenovar {
         try (ZContext context = new ZContext(); ZContext context2 = new ZContext()) {
 
             ZMQ.Socket suscriberGC1 = context.createSocket(SocketType.SUB);
-            
+            ZMQ.Socket conectarBDActorRenovar = context.createSocket(SocketType.REP);
+            conectarBDActorRenovar.bind("tcp://*:5555");
+            Hilo actualizarDB = new Hilo("act", conectarBDActorRenovar);
+            actualizarDB.start();
             while (!Thread.currentThread().isInterrupted()) {
 
                 if (suscriberGC1.connect("tcp://localHost:5557") ) {
@@ -29,6 +32,9 @@ public class ActorRenovar {
                     SubHilo subh = new SubHilo("", "", "", "", "");
                     String string, mensaje1 = "", mensaje2 = "", mensaje3 = "";
                     StringTokenizer sscanf;
+                    /**
+                     * RECIBE MENSAJE DEL GC
+                     */
                     string = suscriberGC1.recvStr(0).trim();
                     sscanf = new StringTokenizer(string, " ");
                     int codigo = Integer.valueOf(sscanf.nextToken());
@@ -40,6 +46,12 @@ public class ActorRenovar {
                         subh.start();
                         System.out.println(
                                 "Received " + " :  [" + codigo + " " + mensaje1 + " " + mensaje2 + " " + mensaje3 + "]");
+                        ZMQ.Socket conectarHiloRenovar= context.createSocket(SocketType.REQ);
+                        /**
+                         * SE CONECTA CON EL HILO DEL ACTOR DEVOLVER
+                         */
+                        conectarHiloRenovar.connect("tcp://10.0.4.87:5555");
+                        conectarHiloRenovar.send(string);
                     }
                 }
             }

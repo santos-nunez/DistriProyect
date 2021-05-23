@@ -52,8 +52,13 @@ public class LibroController {
         Boolean modifico = false;
         if (libro != null) {
             int unidades = libro.getUnidades() + 1;
-            libro.setUnidades(unidades);
-            modifico = this.data.modificarLibro(this.arg, libro);
+            int unidadesPrestadas = libro.getUnidades() - 1;
+            if (unidadesPrestadas >= 0) {
+                libro.setUnidades(unidades);
+                libro.setUnidadesPrestadas(unidadesPrestadas);
+                modifico = this.data.modificarLibro(this.arg, libro);
+            }
+
         }
         return modifico;
     }

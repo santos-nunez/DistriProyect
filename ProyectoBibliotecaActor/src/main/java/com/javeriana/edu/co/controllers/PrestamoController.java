@@ -6,6 +6,8 @@ import java.util.List;
 import com.javeriana.edu.co.models.Libro;
 import com.javeriana.edu.co.models.Prestamo;
 import com.javeriana.edu.co.repository.DataBase;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class PrestamoController {
 
@@ -65,7 +67,10 @@ public class PrestamoController {
             if (prestamo != null && !prestamo.getFinalizado()) {
                 prestamo.setFinalizado(true);
                 modificado = this.data.modificarPrestamo(this.arg, prestamo);
-                libro.devolverLibro(lib);
+                if(libro.devolverLibro(lib))
+                {
+                    System.out.println("NO SE PUDO DEVOLVER");
+                }
             }
         }
 
