@@ -24,7 +24,7 @@ public class ActorRenovar {
             actualizarDB.start();
             while (!Thread.currentThread().isInterrupted()) {
 
-                if (suscriberGC1.connect("tcp://localHost:5557") ) {
+                if (suscriberGC1.connect("tcp://*:5557") ) {
                 //if (suscriberGC1.connect("tcp://10.0.4.87:5557")) {
                     conect = true;
                     String filter = (args.length > 0) ? args[0] : "10000 ";

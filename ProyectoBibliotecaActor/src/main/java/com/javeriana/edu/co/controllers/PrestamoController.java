@@ -67,7 +67,7 @@ public class PrestamoController {
             if (prestamo != null && !prestamo.getFinalizado()) {
                 prestamo.setFinalizado(true);
                 modificado = this.data.modificarPrestamo(this.arg, prestamo);
-                if(libro.devolverLibro(lib))
+                if(!libro.devolverLibro(lib))
                 {
                     System.out.println("NO SE PUDO DEVOLVER");
                 }
