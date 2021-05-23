@@ -54,6 +54,9 @@ public class PrestamoController {
 
     public boolean devolverPrestamo(int idSolicitud) {
         Prestamo prestamo = obtenerPrestamoById(idSolicitud);
+        if (prestamo == null) {
+            return false;
+        }
         String codigo = prestamo.getCodigoLibro();
         Boolean modificado = false;
         LibroController libro = new LibroController("libros.txt");
