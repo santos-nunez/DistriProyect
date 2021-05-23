@@ -35,6 +35,7 @@ public class ActorSolicitar {
             actualizarDB.start();
             while (!Thread.currentThread().isInterrupted()) {
                 byte[] reply = socket.recv(0);
+                
                 System.out.println("Received " + ": [" + new String(reply, ZMQ.CHARSET) + "]");
                 mensaje = new String(reply, ZMQ.CHARSET);
                 StringTokenizer sscanf = new StringTokenizer(mensaje, " ");
@@ -63,7 +64,9 @@ public class ActorSolicitar {
                     estado = libroController.solicitarLibro(codigoLibro, idSolicitante, dat1, dat2);
                     socket.send(estado);
                 }else{
-                    
+                    Thread.sleep(500);
+                    estado = libroController.solicitarLibro(codigoLibro, idSolicitante, dat1, dat2);
+                    socket.send(estado);
                 }
                 
             }
