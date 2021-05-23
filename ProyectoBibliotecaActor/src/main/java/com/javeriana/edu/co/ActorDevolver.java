@@ -1,4 +1,3 @@
-
 package com.javeriana.edu.co;
 
 import java.util.StringTokenizer;
@@ -24,7 +23,7 @@ public class ActorDevolver {
             actualizarDB.start();
             while (!Thread.currentThread().isInterrupted()) {
                 if (suscriberGC1.connect("tcp://localHost:5557")) {
-                //if (suscriberGC1.connect("tcp://10.0.4.87:5557")) {
+                    //if (suscriberGC1.connect("tcp://10.0.4.87:5557")) {
                     conect = true;
                     String filter = (args.length > 0) ? args[0] : "10001 ";
                     suscriberGC1.subscribe(filter.getBytes(ZMQ.CHARSET));

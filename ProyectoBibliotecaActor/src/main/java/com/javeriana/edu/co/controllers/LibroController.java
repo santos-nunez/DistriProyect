@@ -124,4 +124,15 @@ public class LibroController {
         }
         return modifico;
     }
+
+    public boolean validarSolicitudLibro(String codigoLibro) {
+        Libro libro = obtenerLibrosByCodigo(codigoLibro);
+        boolean valido = false;
+        if (libro != null) {
+            if (libro.getUnidades() > 0) {
+                valido = true;
+            } 
+        }
+        return valido; 
+    }
 }

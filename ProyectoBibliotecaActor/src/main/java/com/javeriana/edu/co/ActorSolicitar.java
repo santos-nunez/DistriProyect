@@ -27,8 +27,12 @@ public class ActorSolicitar {
             System.out.println("ACTOR SOLICITAR START ------");
             ZMQ.Socket socket = contextClient.createSocket(SocketType.REP);
             socket.bind("tcp://*:3333");
-            String mensaje;
+            String mensaje, string, estado;
             LibroController libroController = new LibroController("libros.txt");
+            ZMQ.Socket conectarBDActorSolicitar = contextClient.createSocket(SocketType.REP);
+            conectarBDActorSolicitar.bind("tcp://*:6666");
+            HiloSolicitar actualizarDB = new HiloSolicitar("act", conectarBDActorSolicitar);
+            actualizarDB.start();
             while (!Thread.currentThread().isInterrupted()) {
                 byte[] reply = socket.recv(0);
                 System.out.println("Received " + ": [" + new String(reply, ZMQ.CHARSET) + "]");
@@ -43,10 +47,29 @@ public class ActorSolicitar {
                 SimpleDateFormat objSDF = new SimpleDateFormat("dd-MM-yyyy");
                 dat1 = objSDF.parse(fechaSolicitud);
                 dat2 = objSDF.parse(fechaFinalizacion);
-                String estado = libroController.solicitarLibro(codigoLibro, idSolicitante, dat1, dat2);
-                socket.send(estado);
+                /**
+                 * SE PERMITE ACTUALIZAR
+                 */
+                ZMQ.Socket conectarHiloDevolver = contextClient.createSocket(SocketType.REQ);
+                /**
+                 * SE CONECTA CON EL HILO DEL ACTOR SOLICITAR
+                 */
+                conectarHiloDevolver.connect("tcp://10.0.4.87:6666");
+                string = "VALIDAR" + " " + codigoLibro + " " + idSolicitante + " " + dat1 + " " + dat2;
+                HiloSolicitar.sleep(500);
+                conectarHiloDevolver.send(string);
+                mensaje = conectarHiloDevolver.recvStr(0).trim();
+                if(mensaje.equalsIgnoreCase("true")){
+                    estado = libroController.solicitarLibro(codigoLibro, idSolicitante, dat1, dat2);
+                    socket.send(estado);
+                }else{
+                    
+                }
+                
             }
         } catch (ParseException ex) {
+            Logger.getLogger(ActorSolicitar.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
             Logger.getLogger(ActorSolicitar.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
