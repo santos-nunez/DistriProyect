@@ -18,10 +18,11 @@ public class ActorRenovar {
         try (ZContext context = new ZContext(); ZContext context2 = new ZContext()) {
 
             ZMQ.Socket suscriberGC1 = context.createSocket(SocketType.SUB);
+            
             while (!Thread.currentThread().isInterrupted()) {
 
-                //if (suscriberGC1.connect("tcp://localHost:5557") ) {
-                if (suscriberGC1.connect("tcp://10.0.4.87:5557")) {
+                if (suscriberGC1.connect("tcp://localHost:5557") ) {
+                //if (suscriberGC1.connect("tcp://10.0.4.87:5557")) {
                     conect = true;
                     String filter = (args.length > 0) ? args[0] : "10000 ";
                     suscriberGC1.subscribe(filter.getBytes(ZMQ.CHARSET));
