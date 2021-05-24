@@ -31,7 +31,7 @@ public class SubHilo extends Thread {
                     dat1 = objSDF.parse(mensaje2);
                     dat2 = objSDF.parse(mensaje3);
                     if (prestamo.renovarPrestamo(Integer.valueOf(mensaje1), dat1, dat2)) {
-                        System.out.println("Se ha modificado la base de datos para el ID " + mensaje1);
+                        System.out.println("Se ha modificado DB para el ID " + mensaje1);
                     } else {
                         System.out.println("No se renovo");
                     }
@@ -45,9 +45,9 @@ public class SubHilo extends Thread {
             if (mensaje1.length() > 0) {
                 PrestamoController prestamo = new PrestamoController("prestamos.txt");
                 if (prestamo.devolverPrestamo(Integer.valueOf(mensaje1))) {
-                    System.out.println("Se ha modificado la base de datos prestamos para el ID " + mensaje1);
+                    System.out.println("Se ha modificado DB prestamos ID " + mensaje1);
                 } else {
-                    System.out.println("No se pudo devolver");
+                    System.out.println("No se devolvio");
                 }
             }
         }
