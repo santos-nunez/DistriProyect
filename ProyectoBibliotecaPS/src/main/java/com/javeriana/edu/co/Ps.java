@@ -14,7 +14,7 @@ public class Ps {
 
     public static void iniciar(String ruta) {
         try (ZContext context = new ZContext()) {
-            String[] servidor = { "tcp://10.0.4.89:7000", "tcp://localhost:7000" };
+            String[] servidor = { "tcp://localhost:7000", "tcp://10.0.4.87:7000" };
             int serverNbr = 0;
             System.out.println("contectado al servidor " + servidor[serverNbr]);
             ZMQ.Socket cliente = context.createSocket(SocketType.REQ);
@@ -31,6 +31,7 @@ public class Ps {
                 cliente.send(request.getBytes(ZMQ.CHARSET), 0);
                 boolean esperandoRespuesta = true;
                 tipo = request.split(" ")[0];
+
                 while (esperandoRespuesta) {
                     // Poll socket for a reply, with timeout
                     if (tipo.equalsIgnoreCase("SOLICITAR")) {
@@ -59,6 +60,7 @@ public class Ps {
                         cliente.send(request);
                     }
                 }
+                Thread.sleep(1000);
             }
             context.destroy();
         } catch (Exception e) {

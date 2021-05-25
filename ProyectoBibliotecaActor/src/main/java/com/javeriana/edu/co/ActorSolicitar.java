@@ -57,7 +57,7 @@ public class ActorSolicitar {
                  */
                 conectarHiloDevolver.connect("tcp://10.0.4.87:6666");
                 string = "VALIDAR" + " " + codigoLibro + " " + idSolicitante + " " + fechaSolicitud + " " + fechaFinalizacion;
-                HiloSolicitar.sleep(500);
+                HiloSolicitar.sleep(100);
                 conectarHiloDevolver.send(string);
                 mensaje = conectarHiloDevolver.recvStr(0).trim();
                 if (mensaje.equalsIgnoreCase("true")) {

@@ -18,6 +18,7 @@ public class DataBase {
     }
 
     public boolean waitFile(String nameFile) throws InterruptedException {
+        
         File file = new File(nameFile);
         boolean fileIsNotLocked = file.renameTo(file);
         while (!fileIsNotLocked) {
